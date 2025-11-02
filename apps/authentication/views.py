@@ -75,7 +75,7 @@ def login_view(request):
             # Authenticate user (using email as username)
             user = authenticate(request, username=email, password=password)
 
-            if user is not None and user.is_active == 'active':
+            if user is not None and user.status == 'active':
                 login(request, user)
 
                 # Set session expiry based on remember_me

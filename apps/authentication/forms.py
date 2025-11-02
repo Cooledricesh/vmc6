@@ -120,7 +120,7 @@ class SignupForm(UserCreationForm):
         user.username = self.cleaned_data['username']
         user.department = self.cleaned_data.get('department')
         user.role = 'viewer'  # Default role for new users
-        user.is_active = 'pending'  # Requires admin approval
+        user.status = 'pending'  # Requires admin approval
 
         if commit:
             user.save()
@@ -176,9 +176,9 @@ class LoginForm(forms.Form):
                 raise ValidationError('이메일 또는 비밀번호가 올바르지 않습니다.')
 
             # Check if user is approved
-            if user.is_active == 'pending':
+            if user.status == 'pending':
                 raise ValidationError('승인 대기 중인 계정입니다. 관리자 승인을 기다려주세요.')
-            elif user.is_active == 'inactive':
+            elif user.status == 'inactive':
                 raise ValidationError('비활성화된 계정입니다. 관리자에게 문의하세요.')
 
             # Authenticate user

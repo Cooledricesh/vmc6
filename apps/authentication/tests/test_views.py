@@ -57,7 +57,7 @@ class SignupViewTest(TestCase):
         # User 생성 확인
         self.assertTrue(User.objects.filter(email='newuser@university.ac.kr').exists())
         user = User.objects.get(email='newuser@university.ac.kr')
-        self.assertEqual(user.is_active, 'pending')
+        self.assertEqual(user.status, 'pending')
         self.assertEqual(user.role, 'viewer')
 
     # ===== CYCLE 6: 회원가입 뷰 - 실패 케이스 =====
@@ -118,7 +118,7 @@ class SignupViewTest(TestCase):
             email='test@university.ac.kr',
             password='test1234',
             username='테스트',
-            is_active='active',
+            status='active',
         )
         self.client.force_login(user)
 
@@ -142,7 +142,7 @@ class LoginViewTest(TestCase):
         self.active_user = User.objects.create(
             email='active@university.ac.kr',
             username='활성 사용자',
-            is_active='active',
+            status='active',
         )
         self.active_user.set_password('test1234')
         self.active_user.save()
@@ -201,7 +201,7 @@ class LoginViewTest(TestCase):
         pending_user = User.objects.create(
             email='pending@university.ac.kr',
             username='대기',
-            is_active='pending',
+            status='pending',
         )
         pending_user.set_password('test1234')
         pending_user.save()
@@ -268,7 +268,7 @@ class LogoutViewTest(TestCase):
         self.user = User.objects.create(
             email='test@university.ac.kr',
             username='테스트',
-            is_active='active',
+            status='active',
         )
         self.user.set_password('test1234')
         self.user.save()
@@ -317,7 +317,7 @@ class IndexViewTest(TestCase):
         self.user = User.objects.create(
             email='test@university.ac.kr',
             username='테스트',
-            is_active='active',
+            status='active',
         )
 
     def test_index_view_shows_login_for_anonymous(self):

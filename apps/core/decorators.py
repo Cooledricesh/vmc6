@@ -6,6 +6,7 @@ from functools import wraps
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
 
 
 def role_required(allowed_roles):
@@ -24,8 +25,7 @@ def role_required(allowed_roles):
             if hasattr(request.user, 'role') and request.user.role in allowed_roles:
                 return view_func(request, *args, **kwargs)
             else:
-                messages.error(request, '권한이 없습니다.')
-                return redirect('dashboard')
+                return HttpResponseForbidden('권한이 없습니다.')
         return wrapper
     return decorator
 
@@ -42,11 +42,10 @@ def active_user_required(view_func):
     @wraps(view_func)
     @login_required
     def wrapper(request, *args, **kwargs):
-        if hasattr(request.user, 'is_active') and request.user.is_active == 'active':
+        if hasattr(request.user, 'is_active') and request.user.is_active:
             return view_func(request, *args, **kwargs)
         else:
-            messages.error(request, '활성화된 사용자만 접근 가능합니다.')
-            return redirect('login')
+            return HttpResponseForbidden('활성화된 사용자만 접근 가능합니다.')
     return wrapper
 
 

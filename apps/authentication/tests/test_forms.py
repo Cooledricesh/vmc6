@@ -178,7 +178,7 @@ class SignupFormTest(TestCase):
         self.assertIsNotNone(user.id)
         self.assertEqual(user.email, 'test@university.ac.kr')
         self.assertEqual(user.role, 'viewer')
-        self.assertEqual(user.is_active, 'pending')
+        self.assertEqual(user.status, 'pending')
 
 
 class LoginFormTest(TestCase):
@@ -190,7 +190,7 @@ class LoginFormTest(TestCase):
         self.active_user = User.objects.create(
             email='active@university.ac.kr',
             username='활성 사용자',
-            is_active='active',
+            status='active',
         )
         self.active_user.set_password('test1234')
         self.active_user.save()
@@ -199,7 +199,7 @@ class LoginFormTest(TestCase):
         self.pending_user = User.objects.create(
             email='pending@university.ac.kr',
             username='대기 사용자',
-            is_active='pending',
+            status='pending',
         )
         self.pending_user.set_password('test1234')
         self.pending_user.save()
@@ -272,7 +272,7 @@ class LoginFormTest(TestCase):
         inactive_user = User.objects.create(
             email='inactive@university.ac.kr',
             username='비활성',
-            is_active='inactive',
+            status='inactive',
         )
         inactive_user.set_password('test1234')
         inactive_user.save()

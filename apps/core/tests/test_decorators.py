@@ -27,13 +27,13 @@ class RoleRequiredDecoratorTest(TestCase):
         # 테스트 사용자들
         self.admin = User.objects.create(
             email='admin@university.ac.kr',
-            name='관리자',
+            username='관리자',
             role='admin',
             status='active',
         )
         self.viewer = User.objects.create(
             email='viewer@university.ac.kr',
-            name='일반 사용자',
+            username='일반 사용자',
             role='viewer',
             status='active',
         )
@@ -84,7 +84,7 @@ class RoleRequiredDecoratorTest(TestCase):
 
         manager = User.objects.create(
             email='manager@university.ac.kr',
-            name='매니저',
+            username='매니저',
             role='manager',
             status='active',
         )
@@ -127,7 +127,7 @@ class ActiveUserRequiredDecoratorTest(TestCase):
         # Arrange
         pending_user = User.objects.create(
             email='pending@university.ac.kr',
-            name='대기 사용자',
+            username='대기 사용자',
             status='pending',
         )
         request = self.factory.get('/protected')
@@ -148,7 +148,7 @@ class ActiveUserRequiredDecoratorTest(TestCase):
         # Arrange
         active_user = User.objects.create(
             email='active@university.ac.kr',
-            name='활성 사용자',
+            username='활성 사용자',
             status='active',
         )
         request = self.factory.get('/protected')
@@ -169,7 +169,7 @@ class ActiveUserRequiredDecoratorTest(TestCase):
         # Arrange
         inactive_user = User.objects.create(
             email='inactive@university.ac.kr',
-            name='비활성 사용자',
+            username='비활성 사용자',
             status='inactive',
         )
         request = self.factory.get('/protected')

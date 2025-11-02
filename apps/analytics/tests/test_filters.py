@@ -329,7 +329,7 @@ class ApplyUserPermissionFilterTest(TestCase):
             password='password123',
             department='컴퓨터공학과',
             role='admin',
-            is_active='active',
+            status='active',
         )
         cls.manager_user = User.objects.create_user(
             email='manager@test.com',
@@ -337,7 +337,7 @@ class ApplyUserPermissionFilterTest(TestCase):
             password='password123',
             department='전자공학과',
             role='manager',
-            is_active='active',
+            status='active',
         )
         cls.viewer_user = User.objects.create_user(
             email='viewer@test.com',
@@ -345,7 +345,7 @@ class ApplyUserPermissionFilterTest(TestCase):
             password='password123',
             department='기계공학과',
             role='viewer',
-            is_active='active',
+            status='active',
         )
 
         # Create KPI data for different departments
@@ -414,7 +414,7 @@ class ApplyUserPermissionFilterTest(TestCase):
             password='password123',
             department='물리학과',  # No KPI data for this department
             role='viewer',
-            is_active='active',
+            status='active',
         )
         queryset = DepartmentKPI.objects.all()
 
@@ -447,7 +447,7 @@ class ApplyMultipleFiltersTest(TestCase):
             password='password123',
             department='컴퓨터공학과',
             role='viewer',
-            is_active='active',
+            status='active',
         )
 
         cls.admin_user = User.objects.create_user(
@@ -456,7 +456,7 @@ class ApplyMultipleFiltersTest(TestCase):
             password='password123',
             department='전자공학과',
             role='admin',
-            is_active='active',
+            status='active',
         )
 
         # Create KPI data

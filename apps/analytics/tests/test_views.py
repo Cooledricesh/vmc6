@@ -56,7 +56,7 @@ class DashboardViewTest(TestCase):
             username='admin',
             password='testpass123',
             role='admin',
-            is_active='active'
+            status='active'
         )
 
         self.manager = User.objects.create_user(
@@ -64,7 +64,7 @@ class DashboardViewTest(TestCase):
             username='manager',
             password='testpass123',
             role='manager',
-            is_active='active'
+            status='active'
         )
 
         self.viewer_cs = User.objects.create_user(
@@ -73,7 +73,7 @@ class DashboardViewTest(TestCase):
             password='testpass123',
             role='viewer',
             department='컴퓨터공학과',
-            is_active='active'
+            status='active'
         )
 
         self.pending_user = User.objects.create_user(
@@ -81,7 +81,7 @@ class DashboardViewTest(TestCase):
             username='pending',
             password='testpass123',
             role='viewer',
-            is_active='pending'
+            status='pending'
         )
 
         # Create test data for multiple departments
@@ -352,7 +352,7 @@ class DepartmentKPIViewTest(TestCase):
             username='admin',
             password='testpass123',
             role='admin',
-            is_active='active'
+            status='active'
         )
 
         self.viewer_cs = User.objects.create_user(
@@ -361,7 +361,7 @@ class DepartmentKPIViewTest(TestCase):
             password='testpass123',
             role='viewer',
             department='컴퓨터공학과',
-            is_active='active'
+            status='active'
         )
 
         # Create KPI data
@@ -436,7 +436,7 @@ class PublicationsViewTest(TestCase):
             username='admin',
             password='testpass123',
             role='admin',
-            is_active='active'
+            status='active'
         )
 
         # Create publication data
@@ -502,7 +502,7 @@ class ResearchBudgetViewTest(TestCase):
             username='admin',
             password='testpass123',
             role='admin',
-            is_active='active'
+            status='active'
         )
 
         # Create research project
@@ -565,7 +565,7 @@ class StudentsViewTest(TestCase):
             username='admin',
             password='testpass123',
             role='admin',
-            is_active='active'
+            status='active'
         )
 
         # Create student data

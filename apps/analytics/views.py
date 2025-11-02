@@ -48,7 +48,7 @@ def _check_user_active(user):
     Returns:
         bool: True if user is active
     """
-    return user.is_active == 'active'
+    return user.status == 'active'
 
 
 @login_required(login_url='/login/')

@@ -73,27 +73,27 @@ class UserModelTest(TestCase):
 
         # Assert
         self.assertEqual(user.role, 'viewer')
-        self.assertEqual(user.is_active, 'pending')
+        self.assertEqual(user.status, 'pending')
 
     # ===== CYCLE 4: 모델 메서드 =====
     def test_is_approved_method(self):
         """
-        Given: 다양한 is_active 상태를 가진 User
+        Given: 다양한 status 상태를 가진 User
         When: is_approved() 호출
-        Then: is_active='active'일 때만 True
+        Then: status='active'일 때만 True
         """
         # Arrange
         active_user = User.objects.create(
             email='active@university.ac.kr',
             password='test1234',
             username='활성',
-            is_active='active',
+            status='active',
         )
         pending_user = User.objects.create(
             email='pending@university.ac.kr',
             password='test1234',
             username='대기',
-            is_active='pending',
+            status='pending',
         )
 
         # Act & Assert
