@@ -1,5 +1,18 @@
 # apps/authentication/models.py
 from django.db import models
+from django.contrib.auth.models import BaseUserManager
+from django.contrib.auth.hashers import make_password, check_password
+
+
+class UserManager(BaseUserManager):
+    """
+    Custom manager for User model to provide Django auth compatibility.
+    """
+    def get_by_natural_key(self, email):
+        """
+        Get user by email (natural key for authentication).
+        """
+        return self.get(email=email)
 
 
 class User(models.Model):
@@ -20,6 +33,9 @@ class User(models.Model):
     # Django auth system requirements (does NOT affect DB schema due to managed=False)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']
+
+    # Custom manager for authentication
+    objects = UserManager()
 
     # Primary key
     id = models.BigAutoField(primary_key=True)
@@ -99,3 +115,11 @@ class User(models.Model):
         if self.role in ['admin', 'manager']:
             return True
         return self.department == department
+
+    def set_password(self, raw_password):
+        """Set user password (hashed)"""
+        self.password = make_password(raw_password)
+
+    def check_password(self, raw_password):
+        """Check if the provided password is correct"""
+        return check_password(raw_password, self.password)

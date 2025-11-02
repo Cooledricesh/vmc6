@@ -23,15 +23,15 @@ class SignupForm(UserCreationForm):
         help_text='대학교 이메일 주소를 입력하세요.'
     )
 
-    username = forms.CharField(
+    name = forms.CharField(
         max_length=100,
         required=True,
         widget=forms.TextInput(attrs={
             'class': 'form-control',
-            'placeholder': '사용자명'
+            'placeholder': '이름'
         }),
-        label='사용자명',
-        help_text='영문, 숫자, 언더스코어만 사용 가능합니다.'
+        label='이름',
+        help_text='실명을 입력하세요.'
     )
 
     department = forms.CharField(
@@ -65,7 +65,7 @@ class SignupForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('email', 'username', 'department', 'password1', 'password2')
+        fields = ('email', 'name', 'department', 'password1', 'password2')
 
     def clean_email(self):
         """Validate email is unique and from university domain."""
@@ -80,21 +80,6 @@ class SignupForm(UserCreationForm):
             raise ValidationError('대학교 이메일(.ac.kr)만 사용 가능합니다.')
 
         return email
-
-    def clean_username(self):
-        """Validate username is unique."""
-        username = self.cleaned_data.get('username')
-
-        # Check if username already exists
-        if User.objects.filter(username=username).exists():
-            raise ValidationError('이미 사용중인 사용자명입니다.')
-
-        # Validate username format (alphanumeric and underscore only)
-        import re
-        if not re.match(r'^[\w]+$', username):
-            raise ValidationError('사용자명은 영문, 숫자, 언더스코어만 사용 가능합니다.')
-
-        return username
 
     def clean_password1(self):
         """Validate password strength."""
@@ -117,10 +102,13 @@ class SignupForm(UserCreationForm):
         """Create new user with pending status."""
         user = super().save(commit=False)
         user.email = self.cleaned_data['email']
-        user.username = self.cleaned_data['username']
+        user.name = self.cleaned_data['name']
         user.department = self.cleaned_data.get('department')
         user.role = 'viewer'  # Default role for new users
         user.status = 'pending'  # Requires admin approval
+
+        # Set hashed password
+        user.set_password(self.cleaned_data['password1'])
 
         if commit:
             user.save()
