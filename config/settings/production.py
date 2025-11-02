@@ -10,7 +10,16 @@ from .base import *  # noqa
 
 # Production security settings
 DEBUG = False
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+
+# ALLOWED_HOSTS configuration
+allowed_hosts = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+# Auto-add Railway domain if RAILWAY_PUBLIC_DOMAIN exists
+if os.environ.get('RAILWAY_PUBLIC_DOMAIN'):
+    allowed_hosts.append(os.environ.get('RAILWAY_PUBLIC_DOMAIN'))
+# Add common Railway patterns
+allowed_hosts.extend(['*.railway.app', '.railway.app'])
+ALLOWED_HOSTS = allowed_hosts
+
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 if not SECRET_KEY:
