@@ -1,0 +1,52 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Data files
+data/
+*.csv
+*.xlsx
+*.xls
+
+# Analysis and build outputs
+repomix-output.xml
+*.xml
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Editor directories and files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Supabase local
+.supabase/
+supabase/.branches/
+supabase/.temp/
+
+# OS
+Thumbs.db
+ehthumbs.db
+Desktop.ini
