@@ -54,11 +54,31 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'noreply@example.com')
 
-# Logging for production
-LOGGING['loggers']['django']['level'] = 'WARNING'
-LOGGING['loggers']['apps.authentication']['level'] = 'INFO'
-LOGGING['loggers']['apps.data_upload']['level'] = 'INFO'
-LOGGING['loggers']['apps.analytics']['level'] = 'INFO'
+# Logging for production - console only (no file logging)
+LOGGING['handlers']['console'] = {
+    'class': 'logging.StreamHandler',
+    'formatter': 'simple',
+}
+LOGGING['loggers']['django'] = {
+    'handlers': ['console'],
+    'level': 'WARNING',
+    'propagate': True,
+}
+LOGGING['loggers']['apps.authentication'] = {
+    'handlers': ['console'],
+    'level': 'INFO',
+    'propagate': False,
+}
+LOGGING['loggers']['apps.data_upload'] = {
+    'handlers': ['console'],
+    'level': 'INFO',
+    'propagate': False,
+}
+LOGGING['loggers']['apps.analytics'] = {
+    'handlers': ['console'],
+    'level': 'INFO',
+    'propagate': False,
+}
 
 # Static files configuration for Railway
 STATIC_ROOT = BASE_DIR / 'staticfiles'

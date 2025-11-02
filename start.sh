@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+echo "Creating required directories..."
+mkdir -p /app/logs /app/staticfiles /app/media
+
 echo "Running database migrations..."
 python manage.py migrate --noinput --settings=config.settings.production
 
