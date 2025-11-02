@@ -1,0 +1,33 @@
+{% extends "base/base_dashboard.html" %}
+
+{% block title %}Department KPI{% endblock %}
+
+{% block dashboard_content %}
+<div class="kpi-container">
+    <h1>Department KPI Analysis</h1>
+
+    <!-- Year Filter -->
+    <div class="filter-panel">
+        <form method="get">
+            <label for="year">Year:</label>
+            <input type="number" name="year" value="{{ selected_year }}" />
+            <button type="submit">Filter</button>
+        </form>
+    </div>
+
+    <!-- KPI Trend Chart -->
+    <div class="chart-wrapper">
+        <canvas id="kpiTrendChart"></canvas>
+    </div>
+
+    <!-- Department Comparison Chart -->
+    <div class="chart-wrapper">
+        <canvas id="deptComparisonChart"></canvas>
+    </div>
+</div>
+
+<script>
+const kpiTrendData = {{ kpi_trend_data|safe }};
+const deptComparisonData = {{ department_comparison_data|safe }};
+</script>
+{% endblock %}

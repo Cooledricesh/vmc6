@@ -1,0 +1,51 @@
+{% extends "base/base_dashboard.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block dashboard_content %}
+<div class="dashboard-container">
+    <h1>Analytics Dashboard</h1>
+
+    <!-- Summary Statistics -->
+    <div class="summary-stats">
+        <div class="stat-card">
+            <h3>Total Departments</h3>
+            <p>{{ total_departments }}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Total Publications</h3>
+            <p>{{ total_publications }}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Total Students</h3>
+            <p>{{ total_students }}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Average Employment Rate</h3>
+            <p>{{ avg_employment_rate }}%</p>
+        </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="charts-container">
+        <div class="chart-wrapper">
+            <canvas id="employmentChart"></canvas>
+        </div>
+        <div class="chart-wrapper">
+            <canvas id="publicationChart"></canvas>
+        </div>
+        <div class="chart-wrapper">
+            <canvas id="budgetChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+// Employment Chart
+const employmentData = {{ employment_chart_data|safe }};
+// Publication Chart
+const publicationData = {{ publication_chart_data|safe }};
+// Budget Chart
+const budgetData = {{ budget_chart_data|safe }};
+</script>
+{% endblock %}

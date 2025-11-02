@@ -1,0 +1,32 @@
+{% extends "base/base_dashboard.html" %}
+
+{% block title %}Students{% endblock %}
+
+{% block dashboard_content %}
+<div class="students-container">
+    <h1>Student Statistics</h1>
+
+    <!-- Total Students -->
+    <div class="summary-stats">
+        <div class="stat-card">
+            <h3>Total Students</h3>
+            <p>{{ total_students }}</p>
+        </div>
+    </div>
+
+    <!-- Enrollment by Year -->
+    <div class="chart-wrapper">
+        <canvas id="enrollmentChart"></canvas>
+    </div>
+
+    <!-- Department Distribution -->
+    <div class="chart-wrapper">
+        <canvas id="deptDistChart"></canvas>
+    </div>
+</div>
+
+<script>
+const enrollmentData = {{ enrollment_by_year_data|safe }};
+const deptDistData = {{ department_distribution_data|safe }};
+</script>
+{% endblock %}

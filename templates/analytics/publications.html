@@ -1,0 +1,24 @@
+{% extends "base/base_dashboard.html" %}
+
+{% block title %}Publications{% endblock %}
+
+{% block dashboard_content %}
+<div class="publications-container">
+    <h1>Publications Analysis</h1>
+
+    <!-- Journal Grade Distribution -->
+    <div class="chart-wrapper">
+        <canvas id="gradeDistributionChart"></canvas>
+    </div>
+
+    <!-- Publications by Department -->
+    <div class="chart-wrapper">
+        <canvas id="deptPublicationChart"></canvas>
+    </div>
+</div>
+
+<script>
+const gradeDistData = {{ grade_distribution_data|safe }};
+const deptPubData = {{ department_publication_data|safe }};
+</script>
+{% endblock %}

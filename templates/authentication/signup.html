@@ -1,0 +1,283 @@
+{% extends "base/base_auth.html" %}
+
+{% block title %}회원가입 - VMC6 Dashboard{% endblock %}
+
+{% block auth_content %}
+    <!-- Auth Header -->
+    <div class="auth-header">
+        <div class="auth-logo">
+            <i class="bi bi-person-plus-fill"></i>
+        </div>
+        <h1>회원가입</h1>
+        <p>새 계정을 만들어 시작하세요</p>
+    </div>
+
+    <!-- Messages -->
+    {% include 'messages/messages.html' %}
+
+    <!-- Signup Form -->
+    <form method="post" id="signupForm">
+        {% csrf_token %}
+
+        <!-- Non-field errors -->
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger" role="alert">
+                {% for error in form.non_field_errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Email Field -->
+        <div class="mb-3">
+            <label for="{{ form.email.id_for_label }}" class="form-label">
+                {{ form.email.label }}
+                <span class="text-danger">*</span>
+            </label>
+            {{ form.email }}
+            {% if form.email.help_text %}
+                <div class="help-text">{{ form.email.help_text }}</div>
+            {% endif %}
+            {% if form.email.errors %}
+                <div class="field-error">
+                    {% for error in form.email.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Username Field -->
+        <div class="mb-3">
+            <label for="{{ form.username.id_for_label }}" class="form-label">
+                {{ form.username.label }}
+                <span class="text-danger">*</span>
+            </label>
+            {{ form.username }}
+            {% if form.username.help_text %}
+                <div class="help-text">{{ form.username.help_text }}</div>
+            {% endif %}
+            {% if form.username.errors %}
+                <div class="field-error">
+                    {% for error in form.username.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Password Field -->
+        <div class="mb-3">
+            <label for="{{ form.password1.id_for_label }}" class="form-label">
+                {{ form.password1.label }}
+                <span class="text-danger">*</span>
+            </label>
+            <div class="position-relative">
+                {{ form.password1 }}
+                <span class="password-toggle" onclick="togglePassword('{{ form.password1.id_for_label }}')">
+                    <i class="bi bi-eye" id="{{ form.password1.id_for_label }}-icon"></i>
+                </span>
+            </div>
+            {% if form.password1.help_text %}
+                <div class="help-text">{{ form.password1.help_text }}</div>
+            {% endif %}
+            {% if form.password1.errors %}
+                <div class="field-error">
+                    {% for error in form.password1.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Password Confirmation Field -->
+        <div class="mb-3">
+            <label for="{{ form.password2.id_for_label }}" class="form-label">
+                {{ form.password2.label }}
+                <span class="text-danger">*</span>
+            </label>
+            <div class="position-relative">
+                {{ form.password2 }}
+                <span class="password-toggle" onclick="togglePassword('{{ form.password2.id_for_label }}')">
+                    <i class="bi bi-eye" id="{{ form.password2.id_for_label }}-icon"></i>
+                </span>
+            </div>
+            {% if form.password2.help_text %}
+                <div class="help-text">{{ form.password2.help_text }}</div>
+            {% endif %}
+            {% if form.password2.errors %}
+                <div class="field-error">
+                    {% for error in form.password2.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Department Field (Optional) -->
+        <div class="mb-3">
+            <label for="{{ form.department.id_for_label }}" class="form-label">
+                {{ form.department.label }}
+                <span class="text-muted">(선택)</span>
+            </label>
+            {{ form.department }}
+            {% if form.department.help_text %}
+                <div class="help-text">{{ form.department.help_text }}</div>
+            {% endif %}
+            {% if form.department.errors %}
+                <div class="field-error">
+                    {% for error in form.department.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Submit Button -->
+        <div class="d-grid">
+            <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+                회원가입
+            </button>
+        </div>
+    </form>
+
+    <!-- Login Link -->
+    <div class="auth-link">
+        이미 계정이 있으신가요? <a href="{% url 'login' %}">로그인</a>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Password visibility toggle
+    function togglePassword(fieldId) {
+        const passwordField = document.getElementById(fieldId);
+        const icon = document.getElementById(fieldId + '-icon');
+
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text';
+            icon.classList.remove('bi-eye');
+            icon.classList.add('bi-eye-slash');
+        } else {
+            passwordField.type = 'password';
+            icon.classList.remove('bi-eye-slash');
+            icon.classList.add('bi-eye');
+        }
+    }
+
+    // Form submission handling
+    document.getElementById('signupForm').addEventListener('submit', function(e) {
+        const submitBtn = document.getElementById('submitBtn');
+        if (!submitBtn.disabled) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>처리 중...';
+            submitBtn.classList.add('btn-loading');
+        }
+    });
+
+    // Real-time validation (optional enhancement)
+    document.addEventListener('DOMContentLoaded', function() {
+        const emailField = document.querySelector('input[name="email"]');
+        const usernameField = document.querySelector('input[name="username"]');
+        const password1Field = document.querySelector('input[name="password1"]');
+        const password2Field = document.querySelector('input[name="password2"]');
+
+        // Email validation
+        if (emailField) {
+            emailField.addEventListener('blur', function() {
+                const value = this.value;
+                const parent = this.parentElement;
+                let errorDiv = parent.querySelector('.field-error');
+
+                if (value && !value.endsWith('.ac.kr')) {
+                    if (!errorDiv) {
+                        errorDiv = document.createElement('div');
+                        errorDiv.className = 'field-error';
+                        parent.appendChild(errorDiv);
+                    }
+                    errorDiv.textContent = '대학교 이메일(.ac.kr)만 사용 가능합니다.';
+                    this.classList.add('is-invalid');
+                } else {
+                    if (errorDiv) errorDiv.remove();
+                    this.classList.remove('is-invalid');
+                }
+            });
+        }
+
+        // Username validation
+        if (usernameField) {
+            usernameField.addEventListener('blur', function() {
+                const value = this.value;
+                const parent = this.parentElement;
+                let errorDiv = parent.querySelector('.field-error');
+
+                if (value && !/^[\w]+$/.test(value)) {
+                    if (!errorDiv) {
+                        errorDiv = document.createElement('div');
+                        errorDiv.className = 'field-error';
+                        parent.appendChild(errorDiv);
+                    }
+                    errorDiv.textContent = '사용자명은 영문, 숫자, 언더스코어만 사용 가능합니다.';
+                    this.classList.add('is-invalid');
+                } else {
+                    if (errorDiv) errorDiv.remove();
+                    this.classList.remove('is-invalid');
+                }
+            });
+        }
+
+        // Password length validation
+        if (password1Field) {
+            password1Field.addEventListener('blur', function() {
+                const value = this.value;
+                const parent = this.parentElement.parentElement; // Account for position-relative wrapper
+                let errorDiv = parent.querySelector('.field-error');
+
+                if (value && value.length < 8) {
+                    if (!errorDiv) {
+                        errorDiv = document.createElement('div');
+                        errorDiv.className = 'field-error';
+                        parent.appendChild(errorDiv);
+                    }
+                    errorDiv.textContent = '비밀번호는 최소 8자 이상이어야 합니다.';
+                    this.classList.add('is-invalid');
+                } else if (value && (!/[a-zA-Z]/.test(value) || !/\d/.test(value))) {
+                    if (!errorDiv) {
+                        errorDiv = document.createElement('div');
+                        errorDiv.className = 'field-error';
+                        parent.appendChild(errorDiv);
+                    }
+                    errorDiv.textContent = '비밀번호는 영문과 숫자를 포함해야 합니다.';
+                    this.classList.add('is-invalid');
+                } else {
+                    if (errorDiv) errorDiv.remove();
+                    this.classList.remove('is-invalid');
+                }
+            });
+        }
+
+        // Password confirmation validation
+        if (password2Field) {
+            password2Field.addEventListener('blur', function() {
+                const value = this.value;
+                const password1 = password1Field ? password1Field.value : '';
+                const parent = this.parentElement.parentElement; // Account for position-relative wrapper
+                let errorDiv = parent.querySelector('.field-error');
+
+                if (value && value !== password1) {
+                    if (!errorDiv) {
+                        errorDiv = document.createElement('div');
+                        errorDiv.className = 'field-error';
+                        parent.appendChild(errorDiv);
+                    }
+                    errorDiv.textContent = '비밀번호가 일치하지 않습니다.';
+                    this.classList.add('is-invalid');
+                } else {
+                    if (errorDiv) errorDiv.remove();
+                    this.classList.remove('is-invalid');
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

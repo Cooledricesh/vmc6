@@ -1,0 +1,107 @@
+{% extends "base/base_dashboard.html" %}
+
+{% block title %}관리자 대시보드 - VMC6{% endblock %}
+
+{% block dashboard_content %}
+<div class="content-header">
+    <h1>관리자 대시보드</h1>
+    <p class="text-muted">환영합니다, {{ user.username }}님 ({{ user.email }})</p>
+</div>
+
+<div class="row">
+    <!-- Admin Stats Cards -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">전체 사용자</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">-</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-people-fill fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">승인 대기</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">-</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-clock-fill fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">업로드 파일</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">-</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-file-earmark-arrow-up-fill fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">학과 수</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">-</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-building fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="card shadow mb-4">
+    <div class="card-header">
+        <h6 class="m-0 font-weight-bold text-primary">빠른 작업</h6>
+    </div>
+    <div class="card-body">
+        <a href="/admin/" class="btn btn-primary me-2">
+            <i class="bi bi-gear me-1"></i>Django Admin
+        </a>
+        <a href="/admin/authentication/user/" class="btn btn-warning me-2">
+            <i class="bi bi-person-check me-1"></i>사용자 관리
+        </a>
+        <a href="/admin/data_upload/" class="btn btn-success">
+            <i class="bi bi-upload me-1"></i>데이터 업로드
+        </a>
+    </div>
+</div>
+
+<!-- User Info -->
+<div class="card shadow">
+    <div class="card-header">
+        <h6 class="m-0 font-weight-bold text-primary">사용자 정보</h6>
+    </div>
+    <div class="card-body">
+        <p><strong>역할:</strong> {{ role|upper }}</p>
+        <p><strong>부서:</strong> {{ department|default:"전체" }}</p>
+        <p><strong>권한:</strong> 모든 데이터 접근 및 관리 가능</p>
+    </div>
+</div>
+{% endblock %}

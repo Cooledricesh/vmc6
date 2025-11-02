@@ -1,0 +1,134 @@
+{% extends "base/base.html" %}
+
+{% block extra_css %}
+<style>
+    /* Authentication pages specific styles */
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .auth-container {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        max-width: 450px;
+        width: 100%;
+        padding: 40px;
+    }
+
+    .auth-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .auth-header h1 {
+        font-size: 2rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .auth-header p {
+        color: #6c757d;
+        margin: 0;
+    }
+
+    .auth-logo {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+    }
+
+    .auth-logo i {
+        font-size: 2rem;
+        color: white;
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: #495057;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        padding: 0.75rem 1rem;
+    }
+
+    .help-text {
+        font-size: 0.875rem;
+        color: #6c757d;
+        margin-top: 0.25rem;
+    }
+
+    .auth-link {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 0.9rem;
+    }
+
+    .auth-link a {
+        color: #4e73df;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .auth-link a:hover {
+        text-decoration: underline;
+    }
+
+    .invalid-feedback {
+        display: block;
+    }
+
+    .field-error {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    .password-toggle {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        padding: 5px;
+        color: #6c757d;
+    }
+
+    .password-toggle:hover {
+        color: #495057;
+    }
+
+    .position-relative {
+        position: relative;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 576px) {
+        .auth-container {
+            padding: 30px 20px;
+        }
+
+        .auth-header h1 {
+            font-size: 1.75rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    {% block auth_content %}{% endblock %}
+</div>
+{% endblock %}
