@@ -17,6 +17,10 @@ class User(models.Model):
         verbose_name = '사용자'
         verbose_name_plural = '사용자들'
 
+    # Django auth system requirements (does NOT affect DB schema due to managed=False)
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['name']
+
     # Primary key
     id = models.BigAutoField(primary_key=True)
 
@@ -38,6 +42,21 @@ class User(models.Model):
     updated_at = models.DateTimeField(verbose_name='수정일시')
 
     def __str__(self):
+        return self.email
+
+    # Django auth system compatibility methods
+    @property
+    def is_anonymous(self):
+        """Always return False for real users"""
+        return False
+
+    @property
+    def is_authenticated(self):
+        """Always return True for authenticated users"""
+        return True
+
+    def get_username(self):
+        """Return the identifying username for this User"""
         return self.email
 
     @property
