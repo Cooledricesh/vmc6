@@ -29,5 +29,69 @@
 <script>
 const kpiTrendData = {{ kpi_trend_data|safe }};
 const deptComparisonData = {{ department_comparison_data|safe }};
+
+// KPI Trend Chart (Line Chart)
+if (kpiTrendData && document.getElementById('kpiTrendChart')) {
+    new Chart(document.getElementById('kpiTrendChart'), {
+        type: 'line',
+        data: kpiTrendData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'KPI Trends Over Time'
+                },
+                legend: {
+                    display: true,
+                    position: 'top'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return value + '%';
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Department Comparison Chart (Bar Chart)
+if (deptComparisonData && document.getElementById('deptComparisonChart')) {
+    new Chart(document.getElementById('deptComparisonChart'), {
+        type: 'bar',
+        data: deptComparisonData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Employment Rate by Department'
+                },
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: {
+                        callback: function(value) {
+                            return value + '%';
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
 </script>
 {% endblock %}

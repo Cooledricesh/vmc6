@@ -16,7 +16,6 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
 
-    # Dashboard & Profile
-    path('dashboard/', views.dashboard_view, name='dashboard'),
+    # Profile only (dashboard moved to analytics app)
     path('profile/', views.profile_view, name='profile'),
 ]

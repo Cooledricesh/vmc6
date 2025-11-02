@@ -28,5 +28,64 @@
 <script>
 const enrollmentData = {{ enrollment_by_year_data|safe }};
 const deptDistData = {{ department_distribution_data|safe }};
+
+// Enrollment by Year Chart (Line Chart)
+if (enrollmentData && document.getElementById('enrollmentChart')) {
+    new Chart(document.getElementById('enrollmentChart'), {
+        type: 'line',
+        data: enrollmentData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Student Enrollment by Year'
+                },
+                legend: {
+                    display: true,
+                    position: 'top'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Department Distribution Chart (Bar Chart)
+if (deptDistData && document.getElementById('deptDistChart')) {
+    new Chart(document.getElementById('deptDistChart'), {
+        type: 'bar',
+        data: deptDistData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Students by Department'
+                },
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            }
+        }
+    });
+}
 </script>
 {% endblock %}

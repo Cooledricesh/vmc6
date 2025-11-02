@@ -47,5 +47,98 @@ const employmentData = {{ employment_chart_data|safe }};
 const publicationData = {{ publication_chart_data|safe }};
 // Budget Chart
 const budgetData = {{ budget_chart_data|safe }};
+
+// Employment Rate Chart (Bar Chart)
+if (employmentData && document.getElementById('employmentChart')) {
+    new Chart(document.getElementById('employmentChart'), {
+        type: 'bar',
+        data: employmentData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Employment Rate by Department'
+                },
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: {
+                        callback: function(value) {
+                            return value + '%';
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Publication Chart (Bar Chart)
+if (publicationData && document.getElementById('publicationChart')) {
+    new Chart(document.getElementById('publicationChart'), {
+        type: 'bar',
+        data: publicationData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Publications by Department'
+                },
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Budget Execution Chart (Bar Chart)
+if (budgetData && document.getElementById('budgetChart')) {
+    new Chart(document.getElementById('budgetChart'), {
+        type: 'bar',
+        data: budgetData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Budget Execution Rate by Department'
+                },
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: {
+                        callback: function(value) {
+                            return value + '%';
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
 </script>
 {% endblock %}

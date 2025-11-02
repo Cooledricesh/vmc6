@@ -20,5 +20,76 @@
 <script>
 const executionData = {{ execution_rate_data|safe }};
 const categoryData = {{ category_distribution_data|safe }};
+
+// Budget Execution Rate Chart (Bar Chart)
+if (executionData && document.getElementById('executionRateChart')) {
+    new Chart(document.getElementById('executionRateChart'), {
+        type: 'bar',
+        data: executionData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Budget Execution Rate by Department'
+                },
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: {
+                        callback: function(value) {
+                            return value + '%';
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Category Distribution Chart (Pie Chart)
+if (categoryData && document.getElementById('categoryDistChart')) {
+    new Chart(document.getElementById('categoryDistChart'), {
+        type: 'pie',
+        data: categoryData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Budget by Category'
+                },
+                legend: {
+                    display: true,
+                    position: 'right'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed !== null) {
+                                label += new Intl.NumberFormat('ko-KR', {
+                                    style: 'currency',
+                                    currency: 'KRW'
+                                }).format(context.parsed);
+                            }
+                            return label;
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
 </script>
 {% endblock %}

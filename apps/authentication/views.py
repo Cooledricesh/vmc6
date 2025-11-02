@@ -110,30 +110,6 @@ def logout_view(request):
 
 
 @login_required
-def dashboard_view(request):
-    """
-    Dashboard view - main page after login.
-    """
-    # Get user's accessible departments
-    user = request.user
-
-    context = {
-        'title': '대시보드',
-        'user': user,
-        'role': user.role,
-        'department': user.department,
-    }
-
-    # Redirect to appropriate dashboard based on role
-    if user.role == 'admin':
-        return render(request, 'analytics/admin_dashboard.html', context)
-    elif user.role == 'manager':
-        return render(request, 'analytics/manager_dashboard.html', context)
-    else:  # viewer
-        return render(request, 'analytics/viewer_dashboard.html', context)
-
-
-@login_required
 def profile_view(request):
     """
     User profile view.

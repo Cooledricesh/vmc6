@@ -67,12 +67,52 @@
         <nav class="col-md-2 d-none d-md-block sidebar">
             <div class="position-sticky pt-3">
                 <ul class="nav flex-column">
+                    <!-- Main Dashboard -->
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'dashboard' %}">
                             <i class="bi bi-speedometer2 me-2"></i>대시보드
                         </a>
                     </li>
+
+                    <!-- Data Analysis Menu Group -->
+                    <li class="nav-item mt-3">
+                        <h6 class="sidebar-heading px-3 mt-2 mb-1 text-muted text-uppercase">
+                            <small>데이터 분석</small>
+                        </h6>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'analytics:department_kpi' %}">
+                            <i class="bi bi-building me-2"></i>학과 KPI
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'analytics:publications' %}">
+                            <i class="bi bi-journal-text me-2"></i>논문 실적
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'analytics:research_budget' %}">
+                            <i class="bi bi-currency-dollar me-2"></i>연구비
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'analytics:students' %}">
+                            <i class="bi bi-people-fill me-2"></i>학생 현황
+                        </a>
+                    </li>
+
+                    <!-- Data Management Menu Group (Admin Only) -->
                     {% if user.role == 'admin' %}
+                    <li class="nav-item mt-3">
+                        <h6 class="sidebar-heading px-3 mt-2 mb-1 text-muted text-uppercase">
+                            <small>데이터 관리</small>
+                        </h6>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'data_upload:upload_csv' %}">
+                            <i class="bi bi-upload me-2"></i>데이터 업로드
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/admin/">
                             <i class="bi bi-gear me-2"></i>관리자 페이지

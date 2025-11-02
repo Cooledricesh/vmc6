@@ -16,6 +16,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Sum, Avg, Q
 from decimal import Decimal
+import json
 
 from apps.analytics.models import (
     DepartmentKPI,
@@ -141,9 +142,9 @@ def dashboard_view(request):
         'avg_employment_rate': avg_employment_rate,
         'total_research_budget': total_budget,
         'total_execution_amount': execution_total,
-        'employment_chart_data': employment_chart_data,
-        'publication_chart_data': publication_chart_data,
-        'budget_chart_data': budget_chart_data,
+        'employment_chart_data': json.dumps(employment_chart_data),
+        'publication_chart_data': json.dumps(publication_chart_data),
+        'budget_chart_data': json.dumps(budget_chart_data),
     }
 
     return render(request, 'analytics/dashboard.html', context)
@@ -188,17 +189,14 @@ def department_kpi_view(request):
 
     # Get trend data (year over year)
     trend_data = list(kpis.values('evaluation_year').annotate(
-        avg_employment=Avg('employment_rate'),
-        avg_student_faculty=Avg('student_faculty_ratio')
+        avg_employment=Avg('employment_rate')
     ).order_by('evaluation_year'))
 
     kpi_trend_data = to_line_chart_data(
         trend_data,
-        label_field='evaluation_year',
-        value_fields={
-            'avg_employment': 'Employment Rate',
-            'avg_student_faculty': 'Student-Faculty Ratio'
-        }
+        x_field='evaluation_year',
+        y_field='avg_employment',
+        title='Employment Rate (%)'
     )
 
     # Department comparison
@@ -211,8 +209,8 @@ def department_kpi_view(request):
     )
 
     context = {
-        'kpi_trend_data': kpi_trend_data,
-        'department_comparison_data': department_comparison_data,
+        'kpi_trend_data': json.dumps(kpi_trend_data),
+        'department_comparison_data': json.dumps(department_comparison_data),
         'selected_year': selected_year,
     }
 
@@ -267,8 +265,8 @@ def publications_view(request):
     )
 
     context = {
-        'grade_distribution_data': grade_distribution_data,
-        'department_publication_data': department_publication_data,
+        'grade_distribution_data': json.dumps(grade_distribution_data),
+        'department_publication_data': json.dumps(department_publication_data),
     }
 
     return render(request, 'analytics/publications.html', context)
@@ -336,8 +334,8 @@ def research_budget_view(request):
     )
 
     context = {
-        'execution_rate_data': execution_rate_data,
-        'category_distribution_data': category_distribution_data,
+        'execution_rate_data': json.dumps(execution_rate_data),
+        'category_distribution_data': json.dumps(category_distribution_data),
     }
 
     return render(request, 'analytics/research_budget.html', context)
@@ -395,8 +393,8 @@ def students_view(request):
 
     context = {
         'total_students': total_students,
-        'enrollment_by_year_data': enrollment_by_year_data,
-        'department_distribution_data': department_distribution_data,
+        'enrollment_by_year_data': json.dumps(enrollment_by_year_data),
+        'department_distribution_data': json.dumps(department_distribution_data),
     }
 
     return render(request, 'analytics/students.html', context)

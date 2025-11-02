@@ -18,16 +18,23 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from apps.analytics import views as analytics_views
 
 urlpatterns = [
     # Django admin
     path('admin/', admin.site.urls),
 
-    # Authentication URLs
+    # Main dashboard - directly to analytics dashboard_view (non-namespaced)
+    path('dashboard/', analytics_views.dashboard_view, name='dashboard'),
+
+    # Authentication URLs (login, signup, profile)
     path('', include('apps.authentication.urls')),
 
-    # Analytics URLs
+    # Analytics URLs (namespaced as analytics:*)
     path('analytics/', include('apps.analytics.urls')),
+
+    # Data Upload URLs (namespaced as data_upload:*)
+    path('data/', include('apps.data_upload.urls')),
 ]
 
 # Serve media files in development

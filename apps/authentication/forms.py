@@ -20,7 +20,7 @@ class SignupForm(UserCreationForm):
             'placeholder': '이메일 주소'
         }),
         label='이메일',
-        help_text='대학교 이메일 주소를 입력하세요.'
+        help_text='유효한 이메일 주소를 입력하세요.'
     )
 
     name = forms.CharField(
@@ -51,7 +51,7 @@ class SignupForm(UserCreationForm):
             'placeholder': '비밀번호'
         }),
         label='비밀번호',
-        help_text='8자 이상, 영문과 숫자를 포함해야 합니다.'
+        help_text='4자 이상 입력하세요.'
     )
 
     password2 = forms.CharField(
@@ -68,16 +68,12 @@ class SignupForm(UserCreationForm):
         fields = ('email', 'name', 'department', 'password1', 'password2')
 
     def clean_email(self):
-        """Validate email is unique and from university domain."""
+        """Validate email is unique."""
         email = self.cleaned_data.get('email')
 
         # Check if email already exists
         if User.objects.filter(email=email).exists():
             raise ValidationError('이미 등록된 이메일입니다.')
-
-        # Check if email is from university domain
-        if not email.endswith('.ac.kr'):
-            raise ValidationError('대학교 이메일(.ac.kr)만 사용 가능합니다.')
 
         return email
 
@@ -86,15 +82,8 @@ class SignupForm(UserCreationForm):
         password1 = self.cleaned_data.get('password1')
 
         # Check minimum length
-        if len(password1) < 8:
-            raise ValidationError('비밀번호는 최소 8자 이상이어야 합니다.')
-
-        # Check for at least one letter and one number
-        has_letter = any(c.isalpha() for c in password1)
-        has_number = any(c.isdigit() for c in password1)
-
-        if not (has_letter and has_number):
-            raise ValidationError('비밀번호는 영문과 숫자를 포함해야 합니다.')
+        if len(password1) < 4:
+            raise ValidationError('비밀번호는 최소 4자 이상이어야 합니다.')
 
         return password1
 

@@ -20,5 +20,56 @@
 <script>
 const gradeDistData = {{ grade_distribution_data|safe }};
 const deptPubData = {{ department_publication_data|safe }};
+
+// Journal Grade Distribution Chart (Pie Chart)
+if (gradeDistData && document.getElementById('gradeDistributionChart')) {
+    new Chart(document.getElementById('gradeDistributionChart'), {
+        type: 'pie',
+        data: gradeDistData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Publications by Journal Grade'
+                },
+                legend: {
+                    display: true,
+                    position: 'right'
+                }
+            }
+        }
+    });
+}
+
+// Department Publications Chart (Bar Chart)
+if (deptPubData && document.getElementById('deptPublicationChart')) {
+    new Chart(document.getElementById('deptPublicationChart'), {
+        type: 'bar',
+        data: deptPubData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Publications by Department'
+                },
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            }
+        }
+    });
+}
 </script>
 {% endblock %}
