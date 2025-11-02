@@ -1,0 +1,20 @@
+# Railway 환경변수 설정 (Railway 대시보드 Variables 탭에 복사)
+
+# Django Core
+SECRET_KEY=django-prod-k9m#2$p@x7w!v4n&q8s*e5r+y3u^t6i-o1a%z0c#d^f&g
+DEBUG=False
+ALLOWED_HOSTS=*.railway.app
+DJANGO_SETTINGS_MODULE=config.settings.production
+
+# Database (Supabase)
+DATABASE_URL=postgresql://postgres.vqwhekzhmhczdwrrbjke:jehch72),7-23;@aws-1-ap-northeast-2.pooler.supabase.com:5432/postgres
+SUPABASE_DB_HOST=aws-1-ap-northeast-2.pooler.supabase.com
+SUPABASE_DB_PORT=5432
+SUPABASE_DB_NAME=postgres
+SUPABASE_DB_USER=postgres.vqwhekzhmhczdwrrbjke
+SUPABASE_DB_PASSWORD=jehch72),7-23;
+
+# Supabase API
+SUPABASE_URL=https://vqwhekzhmhczdwrrbjke.supabase.co
+SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxd2hla3pobWhjemR3cnJiamtlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIwMTM2NTAsImV4cCI6MjA3NzU4OTY1MH0.8O_OAudCEt2wFtFErolfdyyIR6C9JlmHmjUI5i4cOh0
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxd2hla3pobWhjemR3cnJiamtlIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MjAxMzY1MCwiZXhwIjoyMDc3NTg5NjUwfQ.fIwXONjz7dxCPn6JVIS_ekY3PYJf9G_AewxnoBnDDY0
