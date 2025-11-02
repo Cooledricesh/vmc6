@@ -24,11 +24,135 @@
 
 ### 1.3 프로젝트 기술 스택 확인
 - **백엔드**: Django (Python) + Django 템플릿
-- **데이터베이스**: PostgreSQL (Supabase 활용)
+- **데이터베이스**: PostgreSQL (Supabase)
 - **프론트엔드**: Django 템플릿 + Chart.js
 - **인증**: Django 세션 기반 인증
 - **데이터 처리**: Pandas
 - **배포**: Railway
+
+### 1.4 Supabase 데이터베이스 설정
+본 프로젝트는 PostgreSQL 기반의 Supabase를 데이터베이스로 사용합니다.
+
+#### 1.4.1 Supabase 환경
+- **프로젝트 ID**: vmc6
+- **로컬 개발**: Supabase CLI를 통한 로컬 환경
+- **프로덕션**: Supabase 클라우드 (https://vqwhekzhmhczdwrrbjke.supabase.co)
+
+#### 1.4.2 환경 변수 (.env.local)
+```.env
+NEXT_PUBLIC_SUPABASE_URL=https://vqwhekzhmhczdwrrbjke.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<anon_key>
+NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY=<service_role_key>
+```
+
+#### 1.4.3 데이터베이스 스키마
+- **마이그레이션 파일**: `supabase/migrations/20251102000000_initial_schema.sql`
+- **테이블 수**: 7개 (users, upload_history, department_kpi, publications, research_projects, execution_records, students)
+- **뷰**: 3개 (v_project_execution_rate, v_department_student_stats, v_publication_stats)
+
+#### 1.4.4 Supabase CLI 주요 명령어
+```bash
+# 로컬 Supabase 시작
+supabase start
+
+# 로컬 Supabase 중지
+supabase stop
+
+# 마이그레이션 적용
+supabase db push
+
+# 데이터베이스 리셋 (마이그레이션 재적용)
+supabase db reset
+
+# Supabase Studio 접속 (로컬)
+# http://127.0.0.1:54323
+
+# 원격 데이터베이스와 동기화
+supabase db pull
+```
+
+#### 1.4.5 Django 데이터베이스 설정
+Django에서 Supabase PostgreSQL에 연결하기 위한 설정은 다음과 같습니다:
+
+**config/settings/base.py**:
+```python
+import os
+from pathlib import Path
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': os.environ.get('SUPABASE_DB_PASSWORD', 'postgres'),
+        'HOST': os.environ.get('SUPABASE_DB_HOST', '127.0.0.1'),
+        'PORT': os.environ.get('SUPABASE_DB_PORT', '54322'),
+    }
+}
+```
+
+**로컬 환경** (`config/settings/local.py`):
+```python
+# Supabase 로컬 개발 환경
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': '127.0.0.1',
+        'PORT': '54322',  # Supabase 로컬 DB 포트
+    }
+}
+```
+
+**프로덕션 환경** (`config/settings/production.py`):
+```python
+import dj_database_url
+
+# Railway 또는 Supabase 프로덕션 환경
+DATABASES = {
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL'),
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
+}
+```
+
+#### 1.4.6 마이그레이션 전략
+1. **Supabase 우선**: 스키마 변경은 Supabase 마이그레이션 파일 (`supabase/migrations/*.sql`)로 관리
+2. **Django는 읽기 전용**: Django ORM은 기존 테이블 구조를 읽기만 하며, 스키마 변경은 하지 않음
+3. **초기 마이그레이션**: Django의 `python manage.py migrate`는 Django 내장 앱(admin, auth, sessions 등)에만 적용
+
+**Django 모델과 Supabase 테이블 동기화**:
+```python
+# apps/authentication/models.py
+from django.db import models
+
+class User(models.Model):
+    """Supabase users 테이블과 매핑"""
+
+    class Meta:
+        db_table = 'users'  # Supabase 테이블명과 일치
+        managed = False     # Django가 스키마를 관리하지 않음
+
+    email = models.EmailField(unique=True)
+    password = models.CharField(max_length=255)
+    name = models.CharField(max_length=100)
+    department = models.CharField(max_length=100, null=True, blank=True)
+    position = models.CharField(max_length=100, null=True, blank=True)
+    role = models.CharField(max_length=20)
+    status = models.CharField(max_length=20, default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+```
+
+#### 1.4.7 Supabase 로컬 환경 포트
+- **PostgreSQL**: 54322
+- **API**: 54321
+- **Studio (GUI)**: 54323
+- **Inbucket (이메일 테스트)**: 54324
 
 ---
 
@@ -800,11 +924,161 @@ const defaultChartOptions = {
 ### Phase 0: 프로젝트 기본 설정 (최우선)
 **예상 소요 시간**: 1일
 
-1. Django 프로젝트 생성 및 초기 설정
-2. PostgreSQL 연결 (Supabase)
-3. Django 앱 생성 (core, authentication, data_upload, analytics, utils)
-4. 기본 디렉토리 구조 생성
-5. `requirements.txt` 작성
+#### 0.1 Django 프로젝트 생성
+```bash
+# 가상환경 생성 및 활성화
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+
+# Django 및 필수 패키지 설치
+pip install django psycopg2-binary python-dotenv pandas django-extensions
+```
+
+#### 0.2 Django 프로젝트 구조 생성
+```bash
+# Django 프로젝트 생성
+django-admin startproject config .
+
+# Django 앱 생성
+python manage.py startapp core apps/core
+python manage.py startapp authentication apps/authentication
+python manage.py startapp data_upload apps/data_upload
+python manage.py startapp analytics apps/analytics
+python manage.py startapp utils apps/utils
+
+# 디렉토리 구조 생성
+mkdir -p templates/base templates/components templates/messages
+mkdir -p static/css static/js
+mkdir -p config/settings
+```
+
+#### 0.3 Supabase 데이터베이스 연결
+```bash
+# 로컬 Supabase 시작 (이미 연결되어 있음)
+supabase start
+
+# 마이그레이션 적용 확인
+supabase db reset  # 스키마 재적용
+```
+
+#### 0.4 Django 데이터베이스 설정
+**config/settings/base.py** 파일에 다음 추가:
+```python
+import os
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
+# Supabase PostgreSQL 연결
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': '127.0.0.1',
+        'PORT': '54322',
+    }
+}
+
+# Django 앱 등록
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    # 프로젝트 앱
+    'apps.core',
+    'apps.authentication',
+    'apps.data_upload',
+    'apps.analytics',
+    'apps.utils',
+]
+
+# 커스텀 User 모델 지정 (Phase 2에서 구현)
+# AUTH_USER_MODEL = 'authentication.User'
+```
+
+#### 0.5 환경 변수 설정
+**.env** 파일 생성:
+```env
+# Django 설정
+SECRET_KEY=your-secret-key-here
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1
+
+# Supabase 로컬 DB
+SUPABASE_DB_HOST=127.0.0.1
+SUPABASE_DB_PORT=54322
+SUPABASE_DB_NAME=postgres
+SUPABASE_DB_USER=postgres
+SUPABASE_DB_PASSWORD=postgres
+
+# Supabase API (선택적)
+SUPABASE_URL=https://vqwhekzhmhczdwrrbjke.supabase.co
+SUPABASE_ANON_KEY=<from .env.local>
+SUPABASE_SERVICE_ROLE_KEY=<from .env.local>
+```
+
+#### 0.6 Django 초기 마이그레이션
+```bash
+# Django 내장 앱 마이그레이션만 실행 (admin, auth, sessions 등)
+python manage.py migrate
+
+# Supabase 테이블은 이미 존재하므로 managed=False로 설정
+```
+
+#### 0.7 requirements.txt 작성
+```txt
+Django==4.2.7
+psycopg2-binary==2.9.9
+python-dotenv==1.0.0
+pandas==2.1.3
+openpyxl==3.1.2
+xlrd==2.0.1
+django-extensions==3.2.3
+dj-database-url==2.1.0  # 프로덕션용
+```
+
+#### 0.8 프로젝트 구조 확인
+```
+vmc6/
+├── apps/
+│   ├── core/
+│   ├── authentication/
+│   ├── data_upload/
+│   ├── analytics/
+│   └── utils/
+├── config/
+│   ├── settings/
+│   │   ├── __init__.py
+│   │   ├── base.py
+│   │   ├── local.py
+│   │   └── production.py
+│   ├── urls.py
+│   └── wsgi.py
+├── templates/
+├── static/
+├── supabase/
+│   ├── migrations/
+│   │   └── 20251102000000_initial_schema.sql
+│   └── config.toml
+├── .env
+├── .env.local
+├── manage.py
+└── requirements.txt
+```
+
+#### 0.9 개발 서버 실행 테스트
+```bash
+# Django 개발 서버 실행
+python manage.py runserver
+
+# Supabase Studio 접속 (데이터 확인)
+# http://127.0.0.1:54323
+```
 
 ---
 
@@ -1024,6 +1298,7 @@ const defaultChartOptions = {
 | 버전 | 날짜 | 변경 내용 | 작성자 |
 |------|------|-----------|--------|
 | 1.0 | 2025-11-02 | 초안 작성 | Claude Code |
+| 1.1 | 2025-11-02 | Supabase 데이터베이스 설정 상세 추가<br>- 1.4 Supabase 데이터베이스 설정 섹션 추가<br>- Phase 0 Supabase 연결 절차 상세화<br>- Django-Supabase 통합 가이드 추가<br>- 마이그레이션 전략 명시 | Claude Code |
 
 ---
 
