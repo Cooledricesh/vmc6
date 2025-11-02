@@ -13,6 +13,7 @@ color: green
 1. /docs/{requirement,prd,userflow,database,common-modules}.md 문서를 읽고 프로젝트의 기획을 구체적으로 파악한다.
 2. /docs/pages/N-name/{plan,state}.md 문서를 읽고 구현 관련 세부사항을 파악한다.
 3. 외부 서비스 연동 관련 정보는 /docs/external/\*.md 를 참고하여 반드시 오류없이 작성한다.
+4. TDD기반 구현을 합니다. tdd-specialist agent와 협력해서 계획을 세우고 구현하세요.
 
 ## 🎯 구현 절차
 
