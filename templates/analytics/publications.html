@@ -3,9 +3,11 @@
 {% block title %}Publications{% endblock %}
 
 {% block dashboard_content %}
-<div class="publications-container">
+<div class="content-header">
     <h1>Publications Analysis</h1>
+</div>
 
+<div class="charts-container">
     <!-- Journal Grade Distribution -->
     <div class="chart-wrapper">
         <canvas id="gradeDistributionChart"></canvas>
@@ -28,7 +30,7 @@ if (gradeDistData && document.getElementById('gradeDistributionChart')) {
         data: gradeDistData,
         options: {
             responsive: true,
-            maintainAspectRatio: true,
+            maintainAspectRatio: false,
             plugins: {
                 title: {
                     display: true,
@@ -50,7 +52,7 @@ if (deptPubData && document.getElementById('deptPublicationChart')) {
         data: deptPubData,
         options: {
             responsive: true,
-            maintainAspectRatio: true,
+            maintainAspectRatio: false,
             plugins: {
                 title: {
                     display: true,
@@ -61,6 +63,13 @@ if (deptPubData && document.getElementById('deptPublicationChart')) {
                 }
             },
             scales: {
+                x: {
+                    ticks: {
+                        autoSkip: false,
+                        maxRotation: 45,
+                        minRotation: 45
+                    }
+                },
                 y: {
                     beginAtZero: true,
                     ticks: {

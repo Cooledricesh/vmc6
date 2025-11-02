@@ -53,12 +53,25 @@ class User(models.Model):
     role = models.CharField(max_length=20, verbose_name='역할')
     status = models.CharField(max_length=20, default='pending', verbose_name='상태')
 
-    # Timestamps
+    # Timestamps (managed by application, not Django auto fields)
     created_at = models.DateTimeField(verbose_name='생성일시')
     updated_at = models.DateTimeField(verbose_name='수정일시')
 
     def __str__(self):
         return self.email
+
+    def save(self, *args, **kwargs):
+        """Override save to auto-update updated_at timestamp"""
+        from django.utils import timezone
+
+        # Always update updated_at on save
+        self.updated_at = timezone.now()
+
+        # Set created_at only if this is a new record
+        if not self.pk:
+            self.created_at = self.updated_at
+
+        super().save(*args, **kwargs)
 
     # Django auth system compatibility methods
     @property

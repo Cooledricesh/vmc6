@@ -26,6 +26,18 @@ class DepartmentKPIAdmin(admin.ModelAdmin):
     ordering = ('-evaluation_year', 'college', 'department')
     readonly_fields = ('created_at',)
 
+    def has_add_permission(self, request):
+        """Only admin can add data."""
+        return request.user.role == 'admin'
+
+    def has_change_permission(self, request, obj=None):
+        """Only admin can edit data."""
+        return request.user.role == 'admin'
+
+    def has_delete_permission(self, request, obj=None):
+        """Only admin can delete data."""
+        return request.user.role == 'admin'
+
 
 @admin.register(Publication)
 class PublicationAdmin(admin.ModelAdmin):
@@ -36,6 +48,18 @@ class PublicationAdmin(admin.ModelAdmin):
     search_fields = ('publication_id', 'title', 'first_author', 'journal_name')
     ordering = ('-publication_date',)
     readonly_fields = ('created_at',)
+
+    def has_add_permission(self, request):
+        """Only admin can add data."""
+        return request.user.role == 'admin'
+
+    def has_change_permission(self, request, obj=None):
+        """Only admin can edit data."""
+        return request.user.role == 'admin'
+
+    def has_delete_permission(self, request, obj=None):
+        """Only admin can delete data."""
+        return request.user.role == 'admin'
 
 
 @admin.register(ResearchProject)
@@ -48,6 +72,18 @@ class ResearchProjectAdmin(admin.ModelAdmin):
     ordering = ('-created_at',)
     readonly_fields = ('created_at', 'updated_at')
 
+    def has_add_permission(self, request):
+        """Only admin can add data."""
+        return request.user.role == 'admin'
+
+    def has_change_permission(self, request, obj=None):
+        """Only admin can edit data."""
+        return request.user.role == 'admin'
+
+    def has_delete_permission(self, request, obj=None):
+        """Only admin can delete data."""
+        return request.user.role == 'admin'
+
 
 @admin.register(ExecutionRecord)
 class ExecutionRecordAdmin(admin.ModelAdmin):
@@ -59,6 +95,18 @@ class ExecutionRecordAdmin(admin.ModelAdmin):
     ordering = ('-execution_date',)
     readonly_fields = ('created_at',)
 
+    def has_add_permission(self, request):
+        """Only admin can add data."""
+        return request.user.role == 'admin'
+
+    def has_change_permission(self, request, obj=None):
+        """Only admin can edit data."""
+        return request.user.role == 'admin'
+
+    def has_delete_permission(self, request, obj=None):
+        """Only admin can delete data."""
+        return request.user.role == 'admin'
+
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
@@ -69,6 +117,18 @@ class StudentAdmin(admin.ModelAdmin):
     search_fields = ('student_number', 'name', 'department')
     ordering = ('-admission_year', 'student_number')
     readonly_fields = ('created_at', 'updated_at')
+
+    def has_add_permission(self, request):
+        """Only admin can add data."""
+        return request.user.role == 'admin'
+
+    def has_change_permission(self, request, obj=None):
+        """Only admin can edit data."""
+        return request.user.role == 'admin'
+
+    def has_delete_permission(self, request, obj=None):
+        """Only admin can delete data."""
+        return request.user.role == 'admin'
 
 
 @admin.register(UploadHistory)

@@ -3,40 +3,40 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block dashboard_content %}
-<div class="dashboard-container">
+<div class="content-header">
     <h1>Analytics Dashboard</h1>
+</div>
 
-    <!-- Summary Statistics -->
-    <div class="summary-stats">
-        <div class="stat-card">
-            <h3>Total Departments</h3>
-            <p>{{ total_departments }}</p>
-        </div>
-        <div class="stat-card">
-            <h3>Total Publications</h3>
-            <p>{{ total_publications }}</p>
-        </div>
-        <div class="stat-card">
-            <h3>Total Students</h3>
-            <p>{{ total_students }}</p>
-        </div>
-        <div class="stat-card">
-            <h3>Average Employment Rate</h3>
-            <p>{{ avg_employment_rate }}%</p>
-        </div>
+<!-- Summary Statistics -->
+<div class="summary-stats">
+    <div class="stat-card">
+        <h3>Total Departments</h3>
+        <p>{{ total_departments }}</p>
     </div>
+    <div class="stat-card">
+        <h3>Total Publications</h3>
+        <p>{{ total_publications }}</p>
+    </div>
+    <div class="stat-card">
+        <h3>Total Students</h3>
+        <p>{{ total_students }}</p>
+    </div>
+    <div class="stat-card">
+        <h3>Average Employment Rate</h3>
+        <p>{{ avg_employment_rate }}%</p>
+    </div>
+</div>
 
-    <!-- Charts -->
-    <div class="charts-container">
-        <div class="chart-wrapper">
-            <canvas id="employmentChart"></canvas>
-        </div>
-        <div class="chart-wrapper">
-            <canvas id="publicationChart"></canvas>
-        </div>
-        <div class="chart-wrapper">
-            <canvas id="budgetChart"></canvas>
-        </div>
+<!-- Charts -->
+<div class="charts-container">
+    <div class="chart-wrapper">
+        <canvas id="employmentChart"></canvas>
+    </div>
+    <div class="chart-wrapper">
+        <canvas id="publicationChart"></canvas>
+    </div>
+    <div class="chart-wrapper">
+        <canvas id="budgetChart"></canvas>
     </div>
 </div>
 
@@ -55,7 +55,7 @@ if (employmentData && document.getElementById('employmentChart')) {
         data: employmentData,
         options: {
             responsive: true,
-            maintainAspectRatio: true,
+            maintainAspectRatio: false,
             plugins: {
                 title: {
                     display: true,
@@ -63,9 +63,23 @@ if (employmentData && document.getElementById('employmentChart')) {
                 },
                 legend: {
                     display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return 'Employment Rate: ' + context.parsed.y.toFixed(2) + '%';
+                        }
+                    }
                 }
             },
             scales: {
+                x: {
+                    ticks: {
+                        autoSkip: false,
+                        maxRotation: 45,
+                        minRotation: 45
+                    }
+                },
                 y: {
                     beginAtZero: true,
                     max: 100,
@@ -87,7 +101,7 @@ if (publicationData && document.getElementById('publicationChart')) {
         data: publicationData,
         options: {
             responsive: true,
-            maintainAspectRatio: true,
+            maintainAspectRatio: false,
             plugins: {
                 title: {
                     display: true,
@@ -98,6 +112,13 @@ if (publicationData && document.getElementById('publicationChart')) {
                 }
             },
             scales: {
+                x: {
+                    ticks: {
+                        autoSkip: false,
+                        maxRotation: 45,
+                        minRotation: 45
+                    }
+                },
                 y: {
                     beginAtZero: true,
                     ticks: {
@@ -116,7 +137,7 @@ if (budgetData && document.getElementById('budgetChart')) {
         data: budgetData,
         options: {
             responsive: true,
-            maintainAspectRatio: true,
+            maintainAspectRatio: false,
             plugins: {
                 title: {
                     display: true,

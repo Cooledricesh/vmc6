@@ -99,6 +99,8 @@ class SignupForm(UserCreationForm):
         # Set hashed password
         user.set_password(self.cleaned_data['password1'])
 
+        # Timestamps are automatically set by User.save() method
+
         if commit:
             user.save()
         return user

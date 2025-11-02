@@ -47,19 +47,19 @@
             {% endif %}
         </div>
 
-        <!-- Username Field -->
+        <!-- Name Field -->
         <div class="mb-3">
-            <label for="{{ form.username.id_for_label }}" class="form-label">
-                {{ form.username.label }}
+            <label for="{{ form.name.id_for_label }}" class="form-label">
+                {{ form.name.label }}
                 <span class="text-danger">*</span>
             </label>
-            {{ form.username }}
-            {% if form.username.help_text %}
-                <div class="help-text">{{ form.username.help_text }}</div>
+            {{ form.name }}
+            {% if form.name.help_text %}
+                <div class="help-text">{{ form.name.help_text }}</div>
             {% endif %}
-            {% if form.username.errors %}
+            {% if form.name.errors %}
                 <div class="field-error">
-                    {% for error in form.username.errors %}
+                    {% for error in form.name.errors %}
                         {{ error }}
                     {% endfor %}
                 </div>
@@ -177,54 +177,8 @@
 
     // Real-time validation (optional enhancement)
     document.addEventListener('DOMContentLoaded', function() {
-        const emailField = document.querySelector('input[name="email"]');
-        const usernameField = document.querySelector('input[name="username"]');
         const password1Field = document.querySelector('input[name="password1"]');
         const password2Field = document.querySelector('input[name="password2"]');
-
-        // Email validation
-        if (emailField) {
-            emailField.addEventListener('blur', function() {
-                const value = this.value;
-                const parent = this.parentElement;
-                let errorDiv = parent.querySelector('.field-error');
-
-                if (value && !value.endsWith('.ac.kr')) {
-                    if (!errorDiv) {
-                        errorDiv = document.createElement('div');
-                        errorDiv.className = 'field-error';
-                        parent.appendChild(errorDiv);
-                    }
-                    errorDiv.textContent = '대학교 이메일(.ac.kr)만 사용 가능합니다.';
-                    this.classList.add('is-invalid');
-                } else {
-                    if (errorDiv) errorDiv.remove();
-                    this.classList.remove('is-invalid');
-                }
-            });
-        }
-
-        // Username validation
-        if (usernameField) {
-            usernameField.addEventListener('blur', function() {
-                const value = this.value;
-                const parent = this.parentElement;
-                let errorDiv = parent.querySelector('.field-error');
-
-                if (value && !/^[\w]+$/.test(value)) {
-                    if (!errorDiv) {
-                        errorDiv = document.createElement('div');
-                        errorDiv.className = 'field-error';
-                        parent.appendChild(errorDiv);
-                    }
-                    errorDiv.textContent = '사용자명은 영문, 숫자, 언더스코어만 사용 가능합니다.';
-                    this.classList.add('is-invalid');
-                } else {
-                    if (errorDiv) errorDiv.remove();
-                    this.classList.remove('is-invalid');
-                }
-            });
-        }
 
         // Password length validation
         if (password1Field) {
@@ -233,21 +187,13 @@
                 const parent = this.parentElement.parentElement; // Account for position-relative wrapper
                 let errorDiv = parent.querySelector('.field-error');
 
-                if (value && value.length < 8) {
+                if (value && value.length < 4) {
                     if (!errorDiv) {
                         errorDiv = document.createElement('div');
                         errorDiv.className = 'field-error';
                         parent.appendChild(errorDiv);
                     }
-                    errorDiv.textContent = '비밀번호는 최소 8자 이상이어야 합니다.';
-                    this.classList.add('is-invalid');
-                } else if (value && (!/[a-zA-Z]/.test(value) || !/\d/.test(value))) {
-                    if (!errorDiv) {
-                        errorDiv = document.createElement('div');
-                        errorDiv.className = 'field-error';
-                        parent.appendChild(errorDiv);
-                    }
-                    errorDiv.textContent = '비밀번호는 영문과 숫자를 포함해야 합니다.';
+                    errorDiv.textContent = '비밀번호는 최소 4자 이상이어야 합니다.';
                     this.classList.add('is-invalid');
                 } else {
                     if (errorDiv) errorDiv.remove();

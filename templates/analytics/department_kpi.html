@@ -3,18 +3,20 @@
 {% block title %}Department KPI{% endblock %}
 
 {% block dashboard_content %}
-<div class="kpi-container">
+<div class="content-header">
     <h1>Department KPI Analysis</h1>
+</div>
 
-    <!-- Year Filter -->
-    <div class="filter-panel">
-        <form method="get">
-            <label for="year">Year:</label>
-            <input type="number" name="year" value="{{ selected_year }}" />
-            <button type="submit">Filter</button>
-        </form>
-    </div>
+<!-- Year Filter -->
+<div class="filter-panel mb-4">
+    <form method="get" class="d-flex align-items-center gap-2">
+        <label for="year" class="mb-0">Year:</label>
+        <input type="number" name="year" value="{{ selected_year }}" class="form-control" style="max-width: 150px;" />
+        <button type="submit" class="btn btn-primary">Filter</button>
+    </form>
+</div>
 
+<div class="charts-container">
     <!-- KPI Trend Chart -->
     <div class="chart-wrapper">
         <canvas id="kpiTrendChart"></canvas>
@@ -37,7 +39,7 @@ if (kpiTrendData && document.getElementById('kpiTrendChart')) {
         data: kpiTrendData,
         options: {
             responsive: true,
-            maintainAspectRatio: true,
+            maintainAspectRatio: false,
             plugins: {
                 title: {
                     display: true,
@@ -69,7 +71,7 @@ if (deptComparisonData && document.getElementById('deptComparisonChart')) {
         data: deptComparisonData,
         options: {
             responsive: true,
-            maintainAspectRatio: true,
+            maintainAspectRatio: false,
             plugins: {
                 title: {
                     display: true,
@@ -77,9 +79,23 @@ if (deptComparisonData && document.getElementById('deptComparisonChart')) {
                 },
                 legend: {
                     display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return 'Employment Rate: ' + context.parsed.y.toFixed(2) + '%';
+                        }
+                    }
                 }
             },
             scales: {
+                x: {
+                    ticks: {
+                        autoSkip: false,
+                        maxRotation: 45,
+                        minRotation: 45
+                    }
+                },
                 y: {
                     beginAtZero: true,
                     max: 100,

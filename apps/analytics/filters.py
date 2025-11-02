@@ -117,32 +117,24 @@ def apply_user_permission_filter(
     """
     Apply permission-based filtering based on user role.
 
-    Permission rules:
-    - admin: See all data
-    - manager: See all data
-    - viewer: See only own department's data
+    Permission rules (MVP):
+    - All authenticated users can see all data
+    - Only data UPLOAD is restricted to admin (handled in Django Admin)
 
     Args:
         queryset: Django queryset to filter
         user: User object with role and department
 
     Returns:
-        Filtered queryset based on user permissions
+        Unfiltered queryset (all authenticated users can view all data)
 
     Example:
         >>> kpis = DepartmentKPI.objects.all()
         >>> filtered = apply_user_permission_filter(kpis, request.user)
     """
-    # Admin and manager can see all data
-    if user.role in ['admin', 'manager']:
-        return queryset
-
-    # Viewer can only see their own department
-    if user.role == 'viewer':
-        return queryset.filter(department=user.department)
-
-    # Default: no access
-    return queryset.none()
+    # All authenticated active users can see all data
+    # Data upload restriction is handled separately in Django Admin
+    return queryset
 
 
 def apply_multiple_filters(

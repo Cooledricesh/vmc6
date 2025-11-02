@@ -3,11 +3,13 @@
 {% block title %}Research Budget{% endblock %}
 
 {% block dashboard_content %}
-<div class="research-budget-container">
+<div class="content-header">
     <h1>Research Budget Analysis</h1>
+</div>
 
+<div class="charts-container">
     <!-- Budget Execution Rate -->
-    <div class="chart-wrapper">
+    <div class="chart-wrapper full-width">
         <canvas id="executionRateChart"></canvas>
     </div>
 
@@ -28,17 +30,31 @@ if (executionData && document.getElementById('executionRateChart')) {
         data: executionData,
         options: {
             responsive: true,
-            maintainAspectRatio: true,
+            maintainAspectRatio: false,
             plugins: {
                 title: {
                     display: true,
-                    text: 'Budget Execution Rate by Department'
+                    text: 'Budget Execution Rate by Project (Top 20)'
                 },
                 legend: {
                     display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return 'Execution Rate: ' + context.parsed.y.toFixed(2) + '%';
+                        }
+                    }
                 }
             },
             scales: {
+                x: {
+                    ticks: {
+                        autoSkip: false,
+                        maxRotation: 45,
+                        minRotation: 45
+                    }
+                },
                 y: {
                     beginAtZero: true,
                     max: 100,
@@ -60,7 +76,7 @@ if (categoryData && document.getElementById('categoryDistChart')) {
         data: categoryData,
         options: {
             responsive: true,
-            maintainAspectRatio: true,
+            maintainAspectRatio: false,
             plugins: {
                 title: {
                     display: true,

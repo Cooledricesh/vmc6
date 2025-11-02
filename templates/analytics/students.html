@@ -3,17 +3,19 @@
 {% block title %}Students{% endblock %}
 
 {% block dashboard_content %}
-<div class="students-container">
+<div class="content-header">
     <h1>Student Statistics</h1>
+</div>
 
-    <!-- Total Students -->
-    <div class="summary-stats">
-        <div class="stat-card">
-            <h3>Total Students</h3>
-            <p>{{ total_students }}</p>
-        </div>
+<!-- Total Students -->
+<div class="summary-stats">
+    <div class="stat-card">
+        <h3>Total Students</h3>
+        <p>{{ total_students }}</p>
     </div>
+</div>
 
+<div class="charts-container">
     <!-- Enrollment by Year -->
     <div class="chart-wrapper">
         <canvas id="enrollmentChart"></canvas>
@@ -36,7 +38,7 @@ if (enrollmentData && document.getElementById('enrollmentChart')) {
         data: enrollmentData,
         options: {
             responsive: true,
-            maintainAspectRatio: true,
+            maintainAspectRatio: false,
             plugins: {
                 title: {
                     display: true,
@@ -66,7 +68,7 @@ if (deptDistData && document.getElementById('deptDistChart')) {
         data: deptDistData,
         options: {
             responsive: true,
-            maintainAspectRatio: true,
+            maintainAspectRatio: false,
             plugins: {
                 title: {
                     display: true,
@@ -77,6 +79,13 @@ if (deptDistData && document.getElementById('deptDistChart')) {
                 }
             },
             scales: {
+                x: {
+                    ticks: {
+                        autoSkip: false,
+                        maxRotation: 45,
+                        minRotation: 45
+                    }
+                },
                 y: {
                     beginAtZero: true,
                     ticks: {

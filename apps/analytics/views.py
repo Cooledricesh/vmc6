@@ -14,7 +14,7 @@ All views require login and apply role-based permission filtering.
 """
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count, Sum, Avg, Q
+from django.db.models import Count, Sum, Avg, Q, Max
 from decimal import Decimal
 import json
 
@@ -104,8 +104,31 @@ def dashboard_view(request):
     ).aggregate(total=Sum('amount'))['total'] or Decimal('0')
 
     # Prepare chart data
-    # Employment rate by department
-    kpi_data = list(kpis.values('department', 'employment_rate').order_by('department'))
+    # Employment rate by department (latest year only per department)
+    # Get the latest evaluation_year for each department
+    latest_years = kpis.values('department').annotate(
+        latest_year=Max('evaluation_year')
+    )
+
+    # Create a dict of department -> latest_year
+    dept_latest_year = {item['department']: item['latest_year'] for item in latest_years}
+
+    # Filter KPIs to only include latest year for each department
+    kpi_data = []
+    for dept, latest_year in dept_latest_year.items():
+        dept_kpi = kpis.filter(
+            department=dept,
+            evaluation_year=latest_year
+        ).first()
+        if dept_kpi and dept_kpi.employment_rate is not None:
+            kpi_data.append({
+                'department': f"{dept} ({latest_year})",
+                'employment_rate': dept_kpi.employment_rate
+            })
+
+    # Sort by department name
+    kpi_data.sort(key=lambda x: x['department'])
+
     employment_chart_data = to_bar_chart_data(
         kpi_data,
         label_field='department',
@@ -199,11 +222,40 @@ def department_kpi_view(request):
         title='Employment Rate (%)'
     )
 
-    # Department comparison
-    dept_comparison = list(kpis.values('department', 'employment_rate').order_by('department'))
+    # Department comparison (aggregate by department if year filter is applied)
+    if selected_year:
+        # If year is selected, group by department and take average
+        dept_comparison = list(kpis.values('department').annotate(
+            avg_employment=Avg('employment_rate')
+        ).order_by('department'))
+        # Add year to label
+        for item in dept_comparison:
+            item['label'] = f"{item['department']} ({selected_year})"
+            item['employment_rate'] = item['avg_employment']
+    else:
+        # If no year selected, show latest year for each department
+        latest_years = kpis.values('department').annotate(
+            latest_year=Max('evaluation_year')
+        )
+        dept_latest_year = {item['department']: item['latest_year'] for item in latest_years}
+
+        dept_comparison = []
+        for dept, latest_year in dept_latest_year.items():
+            dept_kpi = kpis.filter(
+                department=dept,
+                evaluation_year=latest_year
+            ).first()
+            if dept_kpi and dept_kpi.employment_rate is not None:
+                dept_comparison.append({
+                    'label': f"{dept} ({latest_year})",
+                    'employment_rate': dept_kpi.employment_rate
+                })
+
+        dept_comparison.sort(key=lambda x: x['label'])
+
     department_comparison_data = to_bar_chart_data(
         dept_comparison,
-        label_field='department',
+        label_field='label',
         value_field='employment_rate',
         title='Employment Rate by Department'
     )
@@ -314,11 +366,14 @@ def research_budget_view(request):
             'execution_rate': rate
         })
 
+    # Limit to top 20 projects for readability
+    execution_rates_sorted = sorted(execution_rates, key=lambda x: x['execution_rate'], reverse=True)[:20]
+
     execution_rate_data = to_bar_chart_data(
-        execution_rates,
+        execution_rates_sorted,
         label_field='project_name',
         value_field='execution_rate',
-        title='Budget Execution Rate by Project'
+        title='Budget Execution Rate by Project (Top 20)'
     )
 
     # Category distribution
