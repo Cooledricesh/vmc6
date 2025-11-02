@@ -16,7 +16,7 @@
     {% include 'messages/messages.html' %}
 
     <!-- Login Form -->
-    <form method="post" id="loginForm">
+    <form method="post" action="{% url 'login' %}" id="loginForm">
         {% csrf_token %}
 
         <!-- Non-field errors -->
