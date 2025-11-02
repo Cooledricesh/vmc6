@@ -418,7 +418,44 @@ GENDER_CHOICES = [('남', '남'), ('여', '여')]
 
 ---
 
-#### 3.2.3 권한 체크 로직
+#### 3.2.3 인증 뷰
+**목적**: 로그인, 회원가입, 로그아웃 뷰 제공
+
+**파일**: `apps/authentication/views.py`
+
+**뷰 목록**:
+
+0. **`index_view()`**: 루트 페이지 핸들러
+   - **URL**: `/`
+   - **기능**:
+     - 인증 상태 확인 (`request.user.is_authenticated`)
+     - 미인증 사용자: `login_view()` 호출 (동일한 로그인 템플릿 렌더링)
+     - 인증된 사용자: `/dashboard`로 리디렉션
+   - **사용 예시**:
+     ```python
+     def index_view(request):
+         """루트 페이지 - 인증 상태에 따라 분기"""
+         if request.user.is_authenticated:
+             return redirect('dashboard')
+         return login_view(request)
+     ```
+
+1. **`login_view()`**: 로그인 뷰
+   - **URL**: `/login`, `/` (미인증 시)
+   - **기능**: 이메일과 비밀번호로 로그인
+   - **템플릿**: `authentication/login.html`
+
+2. **`signup_view()`**: 회원가입 뷰
+   - **URL**: `/signup`
+   - **기능**: 신규 사용자 등록 (status='pending')
+
+3. **`logout_view()`**: 로그아웃 뷰
+   - **URL**: `/logout`
+   - **기능**: 세션 삭제 및 로그인 페이지로 리디렉션
+
+---
+
+#### 3.2.4 권한 체크 로직
 **목적**: 사용자별 데이터 접근 권한 확인
 
 **파일**: `apps/authentication/permissions.py`

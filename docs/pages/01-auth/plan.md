@@ -125,6 +125,12 @@ Cycle 7: 회원가입 템플릿 렌더링
 
 #### Phase 3: 로그인 (4시간)
 ```
+Cycle 0: 루트 페이지 핸들러
+  Red   → test_index_view_redirects_authenticated_user() 작성
+  Red   → test_index_view_shows_login_for_anonymous() 작성
+  Green → index_view() 함수 구현
+  Refactor → login_view 재사용으로 중복 로직 제거
+
 Cycle 1: LoginForm 기본 검증
   Red   → test_login_form_required_fields() 작성
   Green → LoginForm 클래스 생성

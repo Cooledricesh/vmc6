@@ -33,7 +33,12 @@ This document provides a comprehensive summary of all 12 use cases for the Unive
 
 **Primary Actor:** 등록된 사용자 (status='active')
 
+**Entry Points:**
+- 직접 로그인 페이지 접근 (`/login`)
+- 루트 페이지 접근 (`/`) - 미인증 사용자는 자동으로 로그인 폼 표시
+
 **Key Flow:**
+0. 루트 페이지(`/`) 또는 로그인 페이지(`/login`) 접근
 1. 이메일과 비밀번호 입력
 2. 시스템이 사용자 인증 (이메일 조회 → 비밀번호 검증)
 3. 사용자 상태 확인 (active/pending/inactive)

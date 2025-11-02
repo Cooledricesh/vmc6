@@ -45,7 +45,7 @@
 
 | 페이지 | 문서 경로 | 상태 | 주요 내용 |
 |--------|----------|------|----------|
-| **로그인/회원가입** | [01-auth/state.md](./01-auth/state.md) | ✅ 완료 | Django Session, User 모델, 폼 검증 |
+| **루트/로그인/회원가입** | [01-auth/state.md](./01-auth/state.md) | ✅ 완료 | 루트 라우팅(`/`), Django Session, User 모델, 폼 검증 |
 | **대시보드** | 04-dashboard/state.md | ⏳ 작성 예정 | KPI 집계, 권한별 데이터, Chart.js |
 | **학과별 KPI 시각화** | 05-department-kpi/state.md | ⏳ 작성 예정 | 필터 상태, 집계 데이터, 차트 렌더링 |
 | **논문 게재 시각화** | 06-publications/state.md | ⏳ 작성 예정 | 저널 등급 필터, Impact Factor 통계 |

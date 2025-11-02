@@ -33,11 +33,32 @@ UC-02
 - 사용자는 로그인 페이지에 머물며 오류 메시지를 받는다
 
 ## Trigger
-사용자가 로그인 페이지에서 "로그인" 버튼을 클릭
+사용자가 다음 중 하나를 수행:
+- **루트 페이지(`/`) 접근 (미인증 상태)**
+- 로그인 페이지(`/login`) URL로 직접 접근
+- 로그아웃 상태에서 인증 필요 페이지 접근 시 자동 리디렉션
 
 ---
 
 ## Main Flow (Happy Path)
+
+### Step 0: 루트 페이지 접근 (선택적 진입점)
+**Actor:** 사용자 (미인증)
+
+**Action:**
+- 사용자가 루트 URL(`/`) 접근
+- 또는 도메인만 입력 (예: `university.edu`)
+
+**System Response:**
+```python
+def index_view(request):
+    if request.user.is_authenticated:
+        return redirect('dashboard')  # AF-5로 분기
+    return login_view(request)  # Step 1로 진행
+```
+- 세션 확인: `request.user.is_authenticated`
+- **미인증 시**: 로그인 폼 렌더링 (Step 1로 진행)
+- **인증됨 시**: 대시보드로 리디렉션 (AF-5)
 
 ### Step 1: 로그인 페이지 접근
 **Actor:** 사용자

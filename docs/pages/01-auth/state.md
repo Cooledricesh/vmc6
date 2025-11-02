@@ -5,8 +5,8 @@
 
 ## 문서 정보
 - **작성일**: 2025-11-02
-- **버전**: 1.0
-- **대상 페이지**: 로그인 (`/login`), 회원가입 (`/signup`)
+- **버전**: 1.1
+- **대상 페이지**: 루트 (`/`), 로그인 (`/login`), 회원가입 (`/signup`)
 - **관련 Use Cases**: UC-01 (회원가입), UC-02 (로그인)
 - **기술 스택**: Django Templates + Server-side Rendering
 
@@ -15,8 +15,11 @@
 ## 1. 개요
 
 ### 1.1 페이지 목적
-- **로그인 페이지**: 등록된 사용자의 인증 및 세션 생성
-- **회원가입 페이지**: 신규 사용자 등록 및 관리자 승인 대기
+- **루트 페이지 (`/`)**: 인증 상태에 따른 라우팅 분기
+  - 미인증 사용자: 로그인 폼 표시 (동일한 login_view 호출)
+  - 인증된 사용자: 대시보드로 자동 리디렉션
+- **로그인 페이지 (`/login`)**: 등록된 사용자의 인증 및 세션 생성
+- **회원가입 페이지 (`/signup`)**: 신규 사용자 등록 및 관리자 승인 대기
 
 ### 1.2 상태관리 전략
 Django 세션 기반 서버사이드 렌더링을 사용하므로, **클라이언트 측 상태는 최소화**하고 **서버 측 세션 및 데이터베이스 상태**를 중심으로 관리합니다.
@@ -177,6 +180,52 @@ STATIC_CONTENT = {
 ---
 
 ## 3. 상태 변경 플로우 (Flux 패턴)
+
+### 3.0 루트 페이지 라우팅 플로우
+
+```mermaid
+flowchart TD
+    A[사용자가 루트 페이지 접근<br/>'/' ] --> B{인증 상태 확인<br/>request.user.is_authenticated}
+
+    B -->|인증됨| C[대시보드로 리디렉션<br/>302 /dashboard]
+    B -->|미인증| D[로그인 폼 표시<br/>login_view 호출]
+
+    C --> E[대시보드 페이지 렌더링]
+    D --> F[로그인 페이지 렌더링<br/>templates/authentication/login.html]
+```
+
+**라우팅 로직:**
+```python
+# apps/authentication/views.py
+def index_view(request):
+    """
+    루트 페이지 핸들러 - 인증 상태에 따라 분기
+    """
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+    return login_view(request)
+```
+
+**URL 매핑:**
+```python
+# config/urls.py
+urlpatterns = [
+    path('', views.index_view, name='index'),  # 루트
+    path('login/', views.login_view, name='login'),  # 로그인
+    path('signup/', views.signup_view, name='signup'),  # 회원가입
+    # ...
+]
+```
+
+**상태 변화:**
+| 조건 | 요청 경로 | 인증 상태 | 응답 | 최종 페이지 |
+|------|----------|----------|------|-----------|
+| 첫 방문 | `/` | 미인증 | 로그인 폼 (200) | 로그인 페이지 |
+| 로그인 후 | `/` | 인증됨 | 리디렉션 (302) | 대시보드 |
+| 직접 접근 | `/login` | 미인증 | 로그인 폼 (200) | 로그인 페이지 |
+| 직접 접근 | `/login` | 인증됨 | 리디렉션 (302) | 대시보드 |
+
+---
 
 ### 3.1 로그인 플로우
 
@@ -1366,6 +1415,7 @@ class AuthenticationFlowTest(TestCase):
 
 | 버전 | 날짜 | 변경 내용 | 작성자 |
 |------|------|-----------|--------|
+| 1.1 | 2025-11-02 | 루트 페이지 라우팅 추가<br>- 대상 페이지에 루트(`/`) 추가<br>- Section 3.0: 루트 페이지 라우팅 플로우 추가<br>- index_view() 로직 및 URL 매핑 문서화<br>- 인증 상태별 라우팅 테이블 추가 | Claude Code |
 | 1.0 | 2025-11-02 | 초안 작성<br>- 서버 측 상태 정의 (User 모델, Django 세션)<br>- 클라이언트 측 상태 정의 (폼 입력, UI 상태)<br>- Flux 패턴 플로우 (로그인, 회원가입)<br>- 에러 상태 관리<br>- 세션 라이프사이클<br>- 폼 검증 전략 (2단계)<br>- 템플릿 구조 및 JavaScript 예제<br>- 보안 고려사항<br>- 테스트 전략 | Claude Code |
 
 ---
